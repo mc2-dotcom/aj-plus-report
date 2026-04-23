@@ -927,7 +927,7 @@ section { margin-bottom: 120px; scroll-margin-top: 24px; }
 }
 
 /* ============================================================
-   COORDINATION — Amplifier network (pairwise similarity analysis)
+   COORDINATION — Amplifier network (Beacon DB analysis)
    ============================================================ */
 .amp-block {
   margin-top: 40px;
@@ -2006,131 +2006,6 @@ section { margin-bottom: 120px; scroll-margin-top: 24px; }
   .recycle-row { grid-template-columns: 1fr 1fr; }
   .bot-summary .big-num { font-size: 108px; }
 }
-
-/* ============================================================
-   PRINT / PDF EXPORT
-   ============================================================ */
-@page {
-  size: A4;
-  margin: 10mm 12mm;
-}
-
-@media print {
-  /* Preserve colors — keep the dark-on-black blocks actually dark */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
-
-  /* Kill ALL transitions and animations — capture final states */
-  *, *::before, *::after {
-    transition: none !important;
-    animation: none !important;
-  }
-
-  /* Unstick sidebar; make it a cover/TOC that ends the first page */
-  .app {
-    display: block !important;
-    grid-template-columns: none !important;
-  }
-  aside.nav {
-    position: static !important;
-    height: auto !important;
-    width: 100% !important;
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
-    padding: 24px 28px 32px !important;
-    page-break-after: always;
-  }
-  .animate-toggle,
-  .nav-foot .live::before { display: none !important; }
-
-  /* Main content full width */
-  main {
-    padding: 0 !important;
-    max-width: 100% !important;
-  }
-  .hero {
-    margin: 0 0 40px !important;
-    padding: 28px 28px 36px !important;
-    page-break-inside: avoid;
-  }
-  section {
-    margin-bottom: 48px !important;
-    page-break-before: auto;
-  }
-  main > section { padding: 0 28px; }
-
-  /* Hide interactive controls that don't apply to PDF */
-  .play-btn,
-  .tax-filters,
-  .bot-tabs,
-  .sync-hero .controls,
-  .fanon-block .hdr .play-btn,
-  .netmap-detail .d-tag .hint,
-  .netmap-detail .d-footer .click-hint {
-    display: none !important;
-  }
-
-  /* Force animated elements to their final state */
-  .reveal { opacity: 1 !important; transform: none !important; }
-  .fanon-axis .tick { transform: scaleY(1) !important; }
-  .fara-event { opacity: 1 !important; }
-  .fara-event .node { transform: translateX(-50%) scale(1) !important; }
-  .dot-grid .dot { opacity: 1 !important; }
-  .roll-entry { opacity: 1 !important; transform: none !important; }
-  .roll-gap { opacity: 1 !important; }
-
-  /* Network map sizing — SVG should fit within page */
-  .netmap-body {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-  .netmap-canvas { min-height: 0 !important; page-break-inside: avoid; }
-  .netmap-canvas svg { max-height: 540px; }
-  .netmap-detail { page-break-inside: avoid; }
-
-  /* Page-break discipline — don't split these mid-element */
-  .section-head,
-  .metric-tile,
-  .hero-strip,
-  .specimen,
-  .tax-card,
-  .actor-card,
-  .rec-item,
-  .fanon-block,
-  .sync-hero,
-  .bot-hero,
-  .netmap,
-  .amp-block,
-  .hypocrisy,
-  .pullquote,
-  .infra-grid,
-  .hth-metrics,
-  .hth-flow,
-  .hth-identity,
-  .fara-summary,
-  .recycle-table {
-    page-break-inside: avoid;
-  }
-  /* Always keep a section header with its content */
-  .section-head { page-break-after: avoid; }
-  .section-head + * { page-break-before: avoid; }
-
-  /* Tighter type for print density */
-  body { font-size: 11.5pt; line-height: 1.45; }
-  .hero h1 { font-size: 48pt; }
-  .section-head h2 { font-size: 28pt; }
-  .hero .dek { font-size: 13pt; }
-  main > section { max-width: none; }
-
-  /* Links: show URLs after footnote references */
-  .src-item a::after { content: " " attr(href); font-size: 8pt; color: #525252; word-break: break-all; }
-
-  /* Don't break inside rows */
-  .recycle-row, .amp-row, .flow-row, .fara-event { page-break-inside: avoid; }
-}
 </style>
 </head>
 <body>
@@ -2202,7 +2077,7 @@ const RECYCLING = [
 ];
 
 // Head-to-head: @ajplus vs @dropsitenews, top 200 @ajplus tweets, Apr 2025 – Apr 2026
-// Monitored Twitter/X corpus · cosine similarity on embeddings · ±7-day window
+// Beacon Twitter DB · cosine similarity on embeddings · ±7-day window
 const HTH_STATS = {
   topics: 18,
   matches: 32,
@@ -2243,7 +2118,7 @@ const HTH_IDENTITY = {
   }
 };
 
-// Network graph data — all sourced from pairwise similarity analysis
+// Network graph data — all sourced from Beacon DB pairwise analysis
 const NETWORK_NODES = [
   { id: "ajplus",       x: 390, y: 260, r: 52, type: "hub",
     label: "@ajplus", tagline: "Qatar · state-funded",
@@ -2279,7 +2154,7 @@ const NETWORK_NODES = [
 
 // Primary edges: each peer → @ajplus. Secondary: peer-to-peer.
 const NETWORK_EDGES = [
-  // primary (hub to spoke) — data from pairwise similarity analysis
+  // primary (hub to spoke) — data from Beacon DB
   { from: "ajplus", to: "dropsitenews", matches: 32, topics: 18, maxSim: 0.861, label: "32", primary: true },
   { from: "ajplus", to: "mondoweiss",   matches: 35, topics: 17, maxSim: 0.902, label: "35", primary: true },
   { from: "ajplus", to: "btnewsroom",   matches: 22, topics: 18, maxSim: 0.891, label: "22", primary: true },
@@ -2562,7 +2437,6 @@ function useActiveSection() {
    ============================================================ */
 function App() {
   const [animate, setAnimate] = useState(true);
-  const [isPrinting, setIsPrinting] = useState(false);
   const active = useActiveSection();
 
   // Respect prefers-reduced-motion on load
@@ -2571,32 +2445,18 @@ function App() {
     if (mq.matches) setAnimate(false);
   }, []);
 
-  // Disable animations while printing so bars capture at final values
-  useEffect(() => {
-    const before = () => setIsPrinting(true);
-    const after = () => setIsPrinting(false);
-    window.addEventListener("beforeprint", before);
-    window.addEventListener("afterprint", after);
-    return () => {
-      window.removeEventListener("beforeprint", before);
-      window.removeEventListener("afterprint", after);
-    };
-  }, []);
-
-  const effAnimate = animate && !isPrinting;
-
   return (
-    <div className={`app ${effAnimate ? "anim-on" : "anim-off"}`}>
+    <div className={`app ${animate ? "anim-on" : "anim-off"}`}>
       <Sidebar active={active} animate={animate} setAnimate={setAnimate} />
       <main>
         <Hero />
         <Dashboard />
         <Strategic />
         <Taxonomy />
-        <Coordination animate={effAnimate} />
-        <Amplification animate={effAnimate} />
+        <Coordination animate={animate} />
+        <Amplification animate={animate} />
         <Actors />
-        <FARA animate={effAnimate} />
+        <FARA animate={animate} />
         <Recs />
         <Sources />
       </main>
@@ -2877,7 +2737,7 @@ function Coordination({ animate }) {
           <h2>Many accounts.<br/>One script.</h2>
         </div>
         <div className="h-right">
-          A pairwise similarity analysis across a monitored Twitter/X corpus maps a coordination network around @ajplus. <b>Five non-Qatari accounts</b> — four U.S. "independent" outlets and one copy-pasta amplifier — converge on @ajplus's published content at scale. The network has the shape of a star: @ajplus at the hub, peers coordinating <b>through</b> it, not with each other. Click any node.
+          Beacon DB analysis maps a coordination network around @ajplus. <b>Five non-Qatari accounts</b> — four U.S. "independent" outlets and one copy-pasta amplifier — converge on @ajplus's published content at scale. The network has the shape of a star: @ajplus at the hub, peers coordinating <b>through</b> it, not with each other. Click any node.
         </div>
       </div>
 
@@ -3179,7 +3039,7 @@ function NetworkMap({ animate }) {
   return (
     <div className="netmap">
       <div className="netmap-header">
-        <div className="hdr-tag">§ 04 · Coordination network · Pairwise similarity analysis</div>
+        <div className="hdr-tag">§ 04 · Coordination network · Beacon DB pairwise analysis</div>
         <h3>The network has the <span className="red">shape of a star.</span></h3>
         <div className="dek">
           Five non-AJ accounts — four U.S. outlets plus one individual copy-pasta amplifier — converge on @ajplus's published content. <b>Peer-to-peer coordination is rare</b> (1–3 matches at most, dashed edges below). @ajplus is the hub; the peers coordinate <b>through</b> it, not with each other. Edge thickness = semantic match count. Click any node to animate its coordination metrics.
@@ -3295,7 +3155,7 @@ function NetworkMap({ animate }) {
       </div>
 
       <div className="netmap-footnote">
-        <b>Method.</b> For each @ajplus tweet in the top-200 sample (Apr 2025 – Apr 2026), we queried a monitored Twitter/X corpus (70+ accounts) for pairwise tweet embeddings from non-AJ accounts and computed cosine similarity inside a ±7-day window. Primary-edge counts are @ajplus-to-peer matches at similarity &gt; 0.72. Secondary-edge counts are peer-to-peer matches at similarity &gt; 0.77 across a random-sample pass. <b>The absence of strong peer-to-peer edges is itself a finding</b>: these accounts do not coordinate with each other. They coordinate with @ajplus.
+        <b>Method.</b> Beacon Twitter DB (v2.2) · For each @ajplus tweet in the top-200 sample (Apr 2025 – Apr 2026), we queried pairwise tweet embeddings from monitored non-AJ accounts and computed cosine similarity inside a ±7-day window. Primary-edge counts are @ajplus-to-peer matches at similarity &gt; 0.72. Secondary-edge counts are peer-to-peer matches at similarity &gt; 0.77 across a random-sample pass. <b>The absence of strong peer-to-peer edges is itself a finding</b>: these accounts do not coordinate with each other. They coordinate with @ajplus.
       </div>
     </div>
   );
@@ -3329,10 +3189,10 @@ function HeadToHead() {
   return (
     <div className="amp-block">
       <div className="hth-header">
-        <div className="hdr-tag">§ 04 · Featured comparison · Pairwise similarity analysis</div>
+        <div className="hdr-tag">§ 04 · Featured comparison · Beacon DB analysis</div>
         <h3>Same script. <span className="red">Different bylines.</span></h3>
         <div className="hth-dek">
-          @ajplus is Qatar's state-funded digital outlet. <b>@dropsitenews</b> is a U.S. reader-supported newsroom founded in 2025 by former Intercept DC bureau chief Ryan Grim and Jeremy Scahill — marketed as independent American journalism. On paper, two unrelated outlets with different funders and different jurisdictions. In our monitored Twitter/X corpus, their published content converges on <b>18 distinct topics</b> across 12 months, with <b>@dropsitenews arriving first 62% of the time</b> at an average lead of <b>9.8 hours</b>. The pattern is not unique to @dropsitenews — it's just the clearest case.
+          @ajplus is Qatar's state-funded digital outlet. <b>@dropsitenews</b> is a U.S. reader-supported newsroom founded in 2025 by former Intercept DC bureau chief Ryan Grim and Jeremy Scahill — marketed as independent American journalism. On paper, two unrelated outlets with different funders and different jurisdictions. In the Beacon Twitter DB, we found their published content converging on <b>18 distinct topics</b> across 12 months, with <b>@dropsitenews arriving first 62% of the time</b> at an average lead of <b>9.8 hours</b>. The pattern is not unique to @dropsitenews — it's just the clearest case.
         </div>
       </div>
 
@@ -3459,7 +3319,7 @@ function HeadToHead() {
       </div>
 
       <div className="meth-note">
-        <b>Methodology.</b> For the top 200 @ajplus tweets by view count (Apr 2025 – Apr 2026), we queried a monitored Twitter/X corpus for @dropsitenews tweets within a ±7-day window and computed cosine similarity between tweet embeddings. Semantic similarity &gt; 0.72 counted as a match. Directional flow computed on matches ≥ 0.75. Semantic similarity alone cannot prove editorial coordination — but <b>18 distinct topics matching across two accounts with a systematic 9.8-hour lead pattern</b> is the signal this block reports. A narrower 0.80+ similarity cut produces 10 matched pairs, all of which are available on request.
+        <b>Methodology.</b> For the top 200 @ajplus tweets by view count (Apr 2025 – Apr 2026), we queried the Beacon Twitter DB (v2.2) for @dropsitenews tweets within a ±7-day window and computed cosine similarity between tweet embeddings. Semantic similarity &gt; 0.72 counted as a match. Directional flow computed on matches ≥ 0.75. Semantic similarity alone cannot prove editorial coordination — but <b>18 distinct topics matching across two accounts with a systematic 9.8-hour lead pattern</b> is the signal this block reports. A narrower 0.80+ similarity cut produces 10 matched pairs, all of which are visible in the full Beacon query output.
       </div>
     </div>
   );
